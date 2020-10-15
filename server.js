@@ -576,8 +576,9 @@ function main(){
 		    		return Promise.all(prom);
 		    	}));
 		    	console.log('Monatks Pushed');
-		    	
+
 				Promise.all(promArr).then(function(response){
+					console.log('Reading proimise array');
 					var monster = {
 						monSize: response[0],
 						monType: response[1],

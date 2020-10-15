@@ -576,6 +576,12 @@ function main(){
 		    		return Promise.all(prom);
 		    	}));
 		    	console.log('Monatks Pushed');
+		    	
+		    	console.log(promArr);
+		    	Promise.all(promArr).then(function(res){
+		    		console.log(res);
+		    		console.log('READ DATA NO PROBLEMS');
+		    	});
 
 				Promise.all(promArr).then(function(response){
 					console.log('Reading proimise array');

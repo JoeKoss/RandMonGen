@@ -518,6 +518,7 @@ function getRandomAtk(userIn, numAtks, atkArr){
 //Sends a response to the client with the requested data
 function main(){
 	var server = http.createServer((req, res) => {
+		console.log('Got server request');
 		res.statusCode = 200;
 		res.setHeader('Content-Type', 'text/plain');
 		res.setHeader('Access-Control-Allow-Origin', '*');
@@ -526,6 +527,7 @@ function main(){
 		if(req.url == '/favicon.ico') {
 	    }
 	    if (req.url == '/gimmeMon' && req.method === 'POST'){
+	    	console.log('/gimmeMon request received');
 			var userIn = '';
 
 			//Get data from the request
@@ -539,25 +541,36 @@ function main(){
 
 	    		//Add promises to an array of promises
 	    		promArr.push(getMonSize());
+	    		console.log('Monsize');
 	    		promArr.push(getMonType());
+	    		console.log('Montype');
 		    	promArr.push(promArr[0].then(data =>{
 		    		return getMonMovement(data.sizeID);
 		    	}));
+		    	console.log('Monmovement');
 		    	promArr.push(getMonStatParam(userIn));
+		    	console.log('Monstats');
 		    	promArr.push(getMonSkills());
+		    	console.log('Monskills');
 		    	promArr.push(getMonSenses());
+		    	console.log('Monsenses');
 		    	promArr.push(getMonResistances(userIn));
+		    	console.log('Monresistances');
 	    		promArr.push(promArr[6].then(function(data){
 	    			return getMonDamageImmunities(data, userIn);
 	    		}));
+	    		console.log('Mondamageimmune');
 	    		promArr.push(getMonConditionImmunities(userIn));
+	    		console.log('Monconditionimmune');
 				promArr.push(Promise.all(promArr).then(function(data){
 	    			return getMonAbilities(data[0].sizeID, data[2].moveType, data[5]);
 	    		}));
+	    		console.log('Monabilities');
 				//getMonAtks returns a promise containing a promise, so store this in a temp variable
 		    	var monAtkP = promArr[9].then(function(data){
 		    		return getMonAtks(userIn, data);
 		    	});
+		    	console.log('Monatks');
 		    	//we want to get the promise contained inside of the promise, so read the promise and push the promise inside of it
 		    	promArr.push(monAtkP.then(function(prom){
 		    		return Promise.all(prom);
@@ -577,6 +590,7 @@ function main(){
 						monAbilities: response[9],
 						monAtks: response[10]
 					}
+					console.log('Sending data');
 					res.end(JSON.stringify(monster));
 				});
 	    	});

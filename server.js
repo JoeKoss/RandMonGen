@@ -3,7 +3,10 @@ var http = require('http');
 
 //Creates a connection pool that is used for DB queries
 var pool = mysql.createPool({
-	connectionLimit : 10,
+	connectionLimit : 15,
+	connectTimeout  : 60 * 60 * 1000,
+    acquireTimeout  : 60 * 60 * 1000,
+    timeout         : 60 * 60 * 1000,
 	host: 'randmongen.c3guhufae0gx.us-east-2.rds.amazonaws.com',
 	user: 'datareader',
 	password: 'datareader',
@@ -527,7 +530,6 @@ function main(){
 		if(req.url == '/favicon.ico') {
 	    }
 	    if (req.url == '/gimmeMon' && req.method === 'POST'){
-	    	console.log('/gimmeMon request received');
 			var userIn = '';
 
 			//Get data from the request
@@ -541,49 +543,31 @@ function main(){
 
 	    		//Add promises to an array of promises
 	    		promArr.push(getMonSize());
-	    		console.log('Monsize');
 	    		promArr.push(getMonType());
-	    		console.log('Montype');
 		    	promArr.push(promArr[0].then(data =>{
-		    		console.log('Monmovement');
 		    		return getMonMovement(data.sizeID);
 		    	}));
-		    	
 		    	promArr.push(getMonStatParam(userIn));
-		    	console.log('Monstats');
 		    	promArr.push(getMonSkills());
-		    	console.log('Monskills');
 		    	promArr.push(getMonSenses());
-		    	console.log('Monsenses');
 		    	promArr.push(getMonResistances(userIn));
-		    	console.log('Monresistances');
 	    		promArr.push(promArr[6].then(function(data){
-	    			console.log('Mondamageimmune');
 	    			return getMonDamageImmunities(data, userIn);
 	    		}));
-	    		
 	    		promArr.push(getMonConditionImmunities(userIn));
-	    		console.log('Monconditionimmune');
 				promArr.push(Promise.all(promArr).then(function(data){
-					console.log('Monabilities');
 	    			return getMonAbilities(data[0].sizeID, data[2].moveType, data[5]);
 	    		}));
-	    		
 				//getMonAtks returns a promise containing a promise, so store this in a temp variable
 		    	var monAtkP = promArr[9].then(function(data){
-		    		console.log('Monatks');
 		    		return getMonAtks(userIn, data);
 		    	});
-		    	
 		    	//we want to get the promise contained inside of the promise, so read the promise and push the promise inside of it
 		    	promArr.push(monAtkP.then(function(prom){
-		    		console.log('Monatks Pushed');
 		    		return Promise.all(prom);
 		    	}));
-		    	
 
 				Promise.all(promArr).then(function(response){
-					console.log('Reading proimise array');
 					var monster = {
 						monSize: response[0],
 						monType: response[1],
@@ -597,7 +581,6 @@ function main(){
 						monAbilities: response[9],
 						monAtks: response[10]
 					}
-					console.log('Sending data');
 					res.end(JSON.stringify(monster));
 				});
 	    	});

@@ -545,9 +545,10 @@ function main(){
 	    		promArr.push(getMonType());
 	    		console.log('Montype');
 		    	promArr.push(promArr[0].then(data =>{
+		    		console.log('Monmovement');
 		    		return getMonMovement(data.sizeID);
 		    	}));
-		    	console.log('Monmovement');
+		    	
 		    	promArr.push(getMonStatParam(userIn));
 		    	console.log('Monstats');
 		    	promArr.push(getMonSkills());
@@ -557,31 +558,29 @@ function main(){
 		    	promArr.push(getMonResistances(userIn));
 		    	console.log('Monresistances');
 	    		promArr.push(promArr[6].then(function(data){
+	    			console.log('Mondamageimmune');
 	    			return getMonDamageImmunities(data, userIn);
 	    		}));
-	    		console.log('Mondamageimmune');
+	    		
 	    		promArr.push(getMonConditionImmunities(userIn));
 	    		console.log('Monconditionimmune');
 				promArr.push(Promise.all(promArr).then(function(data){
+					console.log('Monabilities');
 	    			return getMonAbilities(data[0].sizeID, data[2].moveType, data[5]);
 	    		}));
-	    		console.log('Monabilities');
+	    		
 				//getMonAtks returns a promise containing a promise, so store this in a temp variable
 		    	var monAtkP = promArr[9].then(function(data){
+		    		console.log('Monatks');
 		    		return getMonAtks(userIn, data);
 		    	});
-		    	console.log('Monatks');
+		    	
 		    	//we want to get the promise contained inside of the promise, so read the promise and push the promise inside of it
 		    	promArr.push(monAtkP.then(function(prom){
+		    		console.log('Monatks Pushed');
 		    		return Promise.all(prom);
 		    	}));
-		    	console.log('Monatks Pushed');
 		    	
-		    	console.log(promArr);
-		    	Promise.all(promArr).then(function(res){
-		    		console.log(res);
-		    		console.log('READ DATA NO PROBLEMS');
-		    	});
 
 				Promise.all(promArr).then(function(response){
 					console.log('Reading proimise array');

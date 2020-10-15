@@ -575,7 +575,8 @@ function main(){
 		    	promArr.push(monAtkP.then(function(prom){
 		    		return Promise.all(prom);
 		    	}));
-
+		    	console.log('Monatks Pushed');
+		    	
 				Promise.all(promArr).then(function(response){
 					var monster = {
 						monSize: response[0],

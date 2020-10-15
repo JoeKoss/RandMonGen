@@ -584,7 +584,7 @@ function main(){
 		}
 	});
 
-	server.listen(8080, '0.0.0.0', () => {
+	server.listen(8080, '0.0.0.0/0', () => {
 		console.log('Server running!');
 	});
 }

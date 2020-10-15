@@ -518,6 +518,7 @@ function getRandomAtk(userIn, numAtks, atkArr){
 //Sends a response to the client with the requested data
 function main(){
 	var server = http.createServer((req, res) => {
+		console.log('Got server req');
 		res.statusCode = 200;
 		res.setHeader('Content-Type', 'text/plain');
 		res.setHeader('Access-Control-Allow-Origin', '*');
@@ -583,7 +584,7 @@ function main(){
 		}
 	});
 
-	server.listen(8080, '3.134.99.16', () => {
+	server.listen(8080, '0.0.0.0', () => {
 		console.log('Server running!');
 	});
 }

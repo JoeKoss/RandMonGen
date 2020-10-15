@@ -583,7 +583,7 @@ function main(){
 		}
 	});
 
-	server.listen(8080, ' 3.134.99.16', () => {
+	server.listen(8080, '3.134.99.16', () => {
 		console.log('Server running!');
 	});
 }

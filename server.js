@@ -3,10 +3,7 @@ var http = require('http');
 
 //Creates a connection pool that is used for DB queries
 var pool = mysql.createPool({
-	connectionLimit : 15,
-	connectTimeout  : 60 * 60 * 1000,
-    acquireTimeout  : 60 * 60 * 1000,
-    timeout         : 60 * 60 * 1000,
+	connectionLimit : 10,
 	host: 'randmongen.c3guhufae0gx.us-east-2.rds.amazonaws.com',
 	user: 'datareader',
 	password: 'datareader',
@@ -521,7 +518,6 @@ function getRandomAtk(userIn, numAtks, atkArr){
 //Sends a response to the client with the requested data
 function main(){
 	var server = http.createServer((req, res) => {
-		console.log('Got server request');
 		res.statusCode = 200;
 		res.setHeader('Content-Type', 'text/plain');
 		res.setHeader('Access-Control-Allow-Origin', '*');
